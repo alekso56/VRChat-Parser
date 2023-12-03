@@ -281,10 +281,7 @@ namespace XSOverlay_VRChat_Parser
                         try
                         {
                             Notifier.SendNotification(nextNotification.Message);
-                            if (nextNotification.Type == EventType.PlayerJoin || nextNotification.Type == EventType.PlayerLeft)
-                            {
-                                Helpers.Speech.say(nextNotification.Message.Content);
-                            }
+                            Helpers.Speech.say(nextNotification.Message.Content);
                         }
                         catch (Exception ex)
                         {

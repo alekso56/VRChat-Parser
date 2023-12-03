@@ -6,7 +6,7 @@
         xmlns:avalonia="clr-namespace:XSOverlay_VRChat_Parser.Avalonia"
         xmlns:controls="clr-namespace:Avalonia.Controls"
         xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="800" Height="800" Width="600" MinWidth="600" MinHeight="800" MaxWidth="600" MaxHeight="800"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="800" Height="840" Width="600" MinWidth="600" MinHeight="800" MaxWidth="600" MaxHeight="800"
         x:Class="XSOverlay_VRChat_Parser.Avalonia.Views.MainWindow"
         Title="XSOverlay VRChat Parser"
         Background="{x:Null}"
@@ -32,7 +32,7 @@
     <!-- Notification Types -->
     <Canvas Width="580" Height="130" VerticalAlignment="Top" Margin="0 60 0 20">
       <Border Background="#aa222222" BorderBrush="#aa222222" BorderThickness="0" CornerRadius="5" Canvas.Top="37">
-        <Canvas Width="580" Height="270" VerticalAlignment="Top">
+        <Canvas Width="580" Height="310" VerticalAlignment="Top">
           <Border Width="580" Background="#44222222" BorderBrush="#aa222222" BorderThickness="0" CornerRadius="5">
             <TextBlock HorizontalAlignment="Center" Text="Notification Settings" FontSize="18" FontWeight="Light" FontStyle="Italic" Margin="5 5 5 5"/>
           </Border>
@@ -43,6 +43,7 @@
             <CheckBox IsChecked="{Binding PortalDroppedChecked}" Height="40">Portal Dropped</CheckBox>
             <CheckBox IsChecked="{Binding WorldChangedChecked}" Height="40">World Change</CheckBox>
             <CheckBox IsChecked="{Binding ShaderKeywordsChecked}" Height="40">Shader Keywords</CheckBox>
+            <CheckBox IsChecked="{Binding WindowsTTSChecked}" Height="40">Windows TTS</CheckBox>
           </StackPanel>
           <StackPanel Margin="0 10 0 0" Canvas.Left="220" Canvas.Top="30">
             <TextBlock Text="Volume" HorizontalAlignment="Center" Width="50"></TextBlock>
@@ -66,6 +67,18 @@
             <DockPanel>
               <Slider Minimum="0" Maximum="1" TickFrequency="0.05" IsSnapToTickEnabled="True" Value="{Binding ShaderKeywordsVolume}" Width="120" Height="40" DockPanel.Dock="Left"></Slider>
               <TextBlock Text="{Binding ShaderKeywordsVolume, StringFormat={}{0:0.00}}" DockPanel.Dock="Right" Margin="10 20 0 0"></TextBlock>
+            </DockPanel>
+            <DockPanel>
+              <Slider Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding VoiceVolume}" Width="120" Height="40" DockPanel.Dock="Left"></Slider>
+              <TextBlock Text="{Binding VoiceVolume, StringFormat={}{0:0}}" DockPanel.Dock="Left" Margin="10 20 0 0"></TextBlock>
+              
+              <ComboBox x:Name="voiceBox" MaxDropDownHeight="100" Width="120" Height="40" DockPanel.Dock="Right" Margin="5">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate> Width="120" Height="40">
+              </ComboBox>
             </DockPanel>
           </StackPanel>
           <StackPanel Margin="0 10 0 0" Canvas.Left="400" Canvas.Top="30">
@@ -96,7 +109,7 @@
       </Border>
     </Canvas>
 
-    <Canvas Width="580" Height="300" VerticalAlignment="Top" Margin="0 380 0 20">
+    <Canvas Width="580" Height="300" VerticalAlignment="Top" Margin="0 420 0 20">
       <Border Background="#aa222222" BorderBrush="#aa222222" BorderThickness="0" CornerRadius="5">
         <Canvas Width="580" Height="430" VerticalAlignment="Top">
           <Border HorizontalAlignment="Center" Width="580" Background="#44222222" BorderBrush="#aa222222" BorderThickness="0" CornerRadius="5">

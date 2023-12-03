@@ -26,6 +26,12 @@ namespace XSOverlay_VRChat_Parser.Models
         public bool LogNotificationEvents { get; set; }
         [Annotation("Opacity for toast notifications. Valid values: 0.0 -> 1.0.")]
         public float Opacity { get; set; }
+        [Annotation("Use Windows TTS to announce events to default speaker. Valid values: true, false")]
+        public bool UseWindowsTTS { get; set; }
+        [Annotation("Preffered voice on startup.")]
+        public string Voiceselection { get; set; }
+        [Annotation("Volume for TTS speech. Valid values: 0 -> 100.")]
+        public int voiceVolume { get; set; }
 
         [Annotation("Determines whether or not player join notifications are delivered. Valid values: true, false", true, "PLAYER JOINED")]
         public bool DisplayPlayerJoined { get; set; }
@@ -128,6 +134,8 @@ namespace XSOverlay_VRChat_Parser.Models
             PortalDroppedNotificationVolume = 0.2f;
             PortalDroppedIconPath = @"\Resources\Icons\portal_dropped.png";
             PortalDroppedAudioPath = XSGlobals.GetBuiltInAudioSourceString(XSAudioDefault.Default);
+
+            voiceVolume = 20;
         }
 
         public string GetLocalResourcePath(string path) => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + path;

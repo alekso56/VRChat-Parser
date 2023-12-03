@@ -152,7 +152,6 @@ namespace XSOverlay_VRChat_Parser
                 Log(ex);
                 Exit();
             }
-
             UIMain.Start(args, BuildAvaloniaApp(), Configuration); // Blocking call to UI lifecycle
             Exit();
         }
@@ -282,6 +281,16 @@ namespace XSOverlay_VRChat_Parser
                         try
                         {
                             Notifier.SendNotification(nextNotification.Message);
+                            if (UIMain.Configuration.UseWindowsTTS && MainWindow.synth != null && (nextNotification.Type == EventType.PlayerJoin || nextNotification.Type == EventType.PlayerLeft))
+                            {
+                                if (MainWindow.Prompt != null && !MainWindow.Prompt.IsCompleted) MainWindow.synth.SpeakAsyncCancel(MainWindow.Prompt);
+                                if (UIMain.Configuration.Voiceselection != null)
+                                {
+                                    MainWindow.synth.SelectVoice(UIMain.Configuration.Voiceselection);
+                                }
+                                MainWindow.synth.Volume = UIMain.Configuration.voiceVolume;
+                                MainWindow.Prompt = MainWindow.synth.SpeakAsync(nextNotification.Message.Content);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -582,7 +591,7 @@ namespace XSOverlay_VRChat_Parser
 
                             --LastKnownPlayerCount;
 
-                            if(!PlayerIsBetweenWorlds)
+                            if (!PlayerIsBetweenWorlds)
                                 ToSend.Add(new Tuple<EventType, XSNotification>(EventType.PlayerLeft, new XSNotification()
                                 {
                                     Timeout = Configuration.PlayerLeftNotificationTimeoutSeconds,
@@ -592,7 +601,7 @@ namespace XSOverlay_VRChat_Parser
                                     Volume = Configuration.PlayerLeftNotificationVolume
                                 }));
 
-                            if(!PlayerIsBetweenWorlds)
+                            if (!PlayerIsBetweenWorlds)
                                 Log(LogEventType.Event, $"[{(IsKnownPlayerCount ? LastKnownPlayerCount.ToString() : "??")}/{(IsKnownPlayerCap ? LastKnownPlayerCap.ToString() : "??")}] Leave: {message}");
                         }
                         // Shader keyword limit exceeded
@@ -651,7 +660,7 @@ namespace XSOverlay_VRChat_Parser
                         // Video requested
                         else if (line.Contains("[Video Playback] Attempting"))
                         {
-                            for(int i = 0; i < tokens.Length; i++)
+                            for (int i = 0; i < tokens.Length; i++)
                             {
                                 if (tokens[i] == "URL")
                                 {
@@ -671,9 +680,9 @@ namespace XSOverlay_VRChat_Parser
                         // Video requested SDK2
                         else if (line.Contains("added URL"))
                         {
-                            for(int i = 0; i < tokens.Length; i++)
+                            for (int i = 0; i < tokens.Length; i++)
                             {
-                                if(tokens[i] == "URL")
+                                if (tokens[i] == "URL")
                                 {
                                     tocLoc = i;
                                     break;
@@ -695,11 +704,11 @@ namespace XSOverlay_VRChat_Parser
                             Log(LogEventType.Info, $"{message}");
                         }
                         // Video error
-                        else if(line.Contains("[Video Playback] ERROR"))
+                        else if (line.Contains("[Video Playback] ERROR"))
                         {
-                            for(int i = 0; i < tokens.Length; i++)
+                            for (int i = 0; i < tokens.Length; i++)
                             {
-                                if(tokens[i] == "ERROR:")
+                                if (tokens[i] == "ERROR:")
                                 {
                                     tocLoc = i;
                                     break;

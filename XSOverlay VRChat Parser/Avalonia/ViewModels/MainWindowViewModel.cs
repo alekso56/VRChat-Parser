@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using XSOverlay_VRChat_Parser.Avalonia.Views;
 
 namespace XSOverlay_VRChat_Parser.Avalonia.ViewModels
 {
@@ -21,6 +22,8 @@ namespace XSOverlay_VRChat_Parser.Avalonia.ViewModels
             portalDroppedTimeout = PortalDroppedTimeout;
             worldChangedTimeout = WorldChangedTimeout;
             shaderKeywordsTimeout = ShaderKeywordsTimeout;
+            windowsTTSChecked = WindowsTTSChecked;
+            voiceVolume = VoiceVolume;
         }
 
         private bool playerJoinedChecked;
@@ -95,6 +98,46 @@ namespace XSOverlay_VRChat_Parser.Avalonia.ViewModels
                     UIMain.SaveConfigurationDebounced();
                 }
                 this.RaiseAndSetIfChanged(ref shaderKeywordsChecked, value);
+            }
+        }
+
+        private bool windowsTTSChecked;
+        public bool WindowsTTSChecked
+        {
+            get => UIMain.Configuration.UseWindowsTTS;
+            set
+            {
+                if (windowsTTSChecked != value)
+                {
+                    UIMain.Configuration.UseWindowsTTS = value;
+                    UIMain.SaveConfigurationDebounced();
+                }
+                this.RaiseAndSetIfChanged(ref windowsTTSChecked, value);
+            }
+        }
+
+        private int voiceVolume;
+        public int VoiceVolume
+        {
+            get => UIMain.Configuration.voiceVolume;
+            set
+            {
+                if (voiceVolume != value)
+                {
+                    UIMain.Configuration.voiceVolume = value;
+                    UIMain.SaveConfigurationDebounced();
+                    if (UIMain.Configuration.UseWindowsTTS && MainWindow.synth != null)
+                    {
+                        if (MainWindow.Prompt != null && !MainWindow.Prompt.IsCompleted) MainWindow.synth.SpeakAsyncCancel(MainWindow.Prompt);
+                        if (UIMain.Configuration.Voiceselection != null)
+                        {
+                            MainWindow.synth.SelectVoice(UIMain.Configuration.Voiceselection);
+                        }
+                        MainWindow.synth.Volume = UIMain.Configuration.voiceVolume;
+                        MainWindow.Prompt = MainWindow.synth.SpeakAsync("Volume test of speech.");
+                    }
+                }
+                this.RaiseAndSetIfChanged(ref voiceVolume, value);
             }
         }
 

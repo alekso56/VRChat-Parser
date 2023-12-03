@@ -7,7 +7,10 @@ using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Speech.Synthesis;
 using System.Xml;
 
 namespace XSOverlay_VRChat_Parser.Avalonia.Views
@@ -19,9 +22,15 @@ namespace XSOverlay_VRChat_Parser.Avalonia.Views
         public static ConcurrentQueue<string> MessageQueue = new ConcurrentQueue<string>();
         private readonly TextEditor EventLog;
         private readonly Button GitHubLink;
+        private readonly ComboBox voiceBox;
 
         private DispatcherTimer LogUpdateTimer;
         private static bool ScrollDelayToggle = false;
+
+        public static SpeechSynthesizer synth = RuntimeInformation
+         .IsOSPlatform(OSPlatform.Windows) ? new SpeechSynthesizer() : null;
+
+        public static Prompt Prompt { get; set; }
 
         public MainWindow()
         {
@@ -44,7 +53,8 @@ namespace XSOverlay_VRChat_Parser.Avalonia.Views
 
             EventLog.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("EventLogSH");
 
-            EventLog.AddHandler(AvaloniaEdit.Rendering.VisualLineLinkText.OpenUriEvent, (s, e) => {
+            EventLog.AddHandler(AvaloniaEdit.Rendering.VisualLineLinkText.OpenUriEvent, (s, e) =>
+            {
                 Process.Start(new ProcessStartInfo { FileName = e.Uri.ToString(), UseShellExecute = true, RedirectStandardOutput = false });
             });
 
@@ -68,8 +78,50 @@ namespace XSOverlay_VRChat_Parser.Avalonia.Views
                     }
 
                 }));
+            voiceBox = this.FindControl<ComboBox>("voiceBox");
+            if (synth != null)
+            {
+                List<string> voices = new List<string>();
+                foreach (InstalledVoice voice in synth.GetInstalledVoices())
+                {
+                    VoiceInfo info = voice.VoiceInfo;
+                    voices.Add(info.Name);
+                }
 
+                voiceBox.Items = voices;
+                if (UIMain.Configuration.Voiceselection != null)
+                {
+                    int index = 0;
+                    foreach (string item in voiceBox.Items)
+                    {
+                        if (item.Equals(UIMain.Configuration.Voiceselection))
+                        {
+                            voiceBox.SelectedIndex = index;
+                            break;
+                        }
+                        index++;
+                    }
+                }
+                else
+                {
+                    voiceBox.SelectedIndex = 0;
+                }
+                voiceBox.SelectionChanged += VoiceBox_SelectionChanged;
+            }
+            else
+            {
+                voiceBox.Items = "Unsupported.";
+                voiceBox.SelectedIndex = 0;
+                voiceBox.IsEnabled = false;
+            }
             LogUpdateTimer.Start();
+        }
+
+        //TODO: implement UI based saving
+        private void VoiceBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UIMain.Configuration.Voiceselection = voiceBox.SelectedItem.ToString();
+            UIMain.SaveConfigurationDebounced();
         }
 
         private void GitHubLink_Click(object sender, global::Avalonia.Interactivity.RoutedEventArgs e)

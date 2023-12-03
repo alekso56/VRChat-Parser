@@ -281,15 +281,9 @@ namespace XSOverlay_VRChat_Parser
                         try
                         {
                             Notifier.SendNotification(nextNotification.Message);
-                            if (UIMain.Configuration.UseWindowsTTS && MainWindow.synth != null && (nextNotification.Type == EventType.PlayerJoin || nextNotification.Type == EventType.PlayerLeft))
+                            if (nextNotification.Type == EventType.PlayerJoin || nextNotification.Type == EventType.PlayerLeft)
                             {
-                                if (MainWindow.Prompt != null && !MainWindow.Prompt.IsCompleted) MainWindow.synth.SpeakAsyncCancel(MainWindow.Prompt);
-                                if (UIMain.Configuration.Voiceselection != null)
-                                {
-                                    MainWindow.synth.SelectVoice(UIMain.Configuration.Voiceselection);
-                                }
-                                MainWindow.synth.Volume = UIMain.Configuration.voiceVolume;
-                                MainWindow.Prompt = MainWindow.synth.SpeakAsync(nextNotification.Message.Content);
+                                Helpers.Speech.say(nextNotification.Message.Content);
                             }
                         }
                         catch (Exception ex)

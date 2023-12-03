@@ -27,11 +27,6 @@ namespace XSOverlay_VRChat_Parser.Avalonia.Views
         private DispatcherTimer LogUpdateTimer;
         private static bool ScrollDelayToggle = false;
 
-        public static SpeechSynthesizer synth = RuntimeInformation
-         .IsOSPlatform(OSPlatform.Windows) ? new SpeechSynthesizer() : null;
-
-        public static Prompt Prompt { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
@@ -79,16 +74,9 @@ namespace XSOverlay_VRChat_Parser.Avalonia.Views
 
                 }));
             voiceBox = this.FindControl<ComboBox>("voiceBox");
-            if (synth != null)
+            if (Helpers.Speech.synth != null)
             {
-                List<string> voices = new List<string>();
-                foreach (InstalledVoice voice in synth.GetInstalledVoices())
-                {
-                    VoiceInfo info = voice.VoiceInfo;
-                    voices.Add(info.Name);
-                }
-
-                voiceBox.Items = voices;
+                voiceBox.Items = Helpers.Speech.getInstalledVoices();
                 if (UIMain.Configuration.Voiceselection != null)
                 {
                     int index = 0;

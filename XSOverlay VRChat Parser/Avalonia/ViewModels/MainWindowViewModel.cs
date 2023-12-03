@@ -126,16 +126,7 @@ namespace XSOverlay_VRChat_Parser.Avalonia.ViewModels
                 {
                     UIMain.Configuration.voiceVolume = value;
                     UIMain.SaveConfigurationDebounced();
-                    if (UIMain.Configuration.UseWindowsTTS && MainWindow.synth != null)
-                    {
-                        if (MainWindow.Prompt != null && !MainWindow.Prompt.IsCompleted) MainWindow.synth.SpeakAsyncCancel(MainWindow.Prompt);
-                        if (UIMain.Configuration.Voiceselection != null)
-                        {
-                            MainWindow.synth.SelectVoice(UIMain.Configuration.Voiceselection);
-                        }
-                        MainWindow.synth.Volume = UIMain.Configuration.voiceVolume;
-                        MainWindow.Prompt = MainWindow.synth.SpeakAsync("Volume test of speech.");
-                    }
+                    Helpers.Speech.say("Volume test of speech.");
                 }
                 this.RaiseAndSetIfChanged(ref voiceVolume, value);
             }

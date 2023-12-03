@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>XSOverlay_VRChat_Parser</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
     <Version>0.22</Version>
@@ -17,6 +17,7 @@
     <PackageReference Include="avalonia" Version="0.10.5" />
     <PackageReference Include="avalonia.desktop" Version="0.10.5" />
     <PackageReference Include="avalonia.reactiveui" Version="0.10.5" />
+    <PackageReference Include="System.Speech" Version="8.0.0" />
     <PackageReference Include="XSNotifications" Version="0.1.2" />
   </ItemGroup>
 

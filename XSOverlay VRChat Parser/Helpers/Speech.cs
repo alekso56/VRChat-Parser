@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Speech.Synthesis;
-using System.Text;
-using System.Threading.Tasks;
-using XSOverlay_VRChat_Parser.Avalonia.Views;
 using XSOverlay_VRChat_Parser.Avalonia;
 
 namespace XSOverlay_VRChat_Parser.Helpers
@@ -16,7 +11,8 @@ namespace XSOverlay_VRChat_Parser.Helpers
 
         internal static Prompt Prompt { get; set; }
 
-        public static void say(string words) {
+        public static void say(string words)
+        {
             if (UIMain.Configuration.UseWindowsTTS && synth != null)
             {
                 if (Prompt != null && !Prompt.IsCompleted) synth.SpeakAsyncCancel(Prompt);
@@ -29,7 +25,8 @@ namespace XSOverlay_VRChat_Parser.Helpers
             }
         }
 
-        public static List<string> getInstalledVoices() {
+        public static List<string> getInstalledVoices()
+        {
 
             List<string> voices = new List<string>();
             foreach (InstalledVoice voice in synth.GetInstalledVoices())
@@ -37,7 +34,7 @@ namespace XSOverlay_VRChat_Parser.Helpers
                 VoiceInfo info = voice.VoiceInfo;
                 voices.Add(info.Name);
             }
-            return voices;  
+            return voices;
         }
     }
 }

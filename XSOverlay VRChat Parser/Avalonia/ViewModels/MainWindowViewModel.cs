@@ -1,5 +1,4 @@
 ﻿using ReactiveUI;
-using XSOverlay_VRChat_Parser.Avalonia.Views;
 
 namespace XSOverlay_VRChat_Parser.Avalonia.ViewModels
 {

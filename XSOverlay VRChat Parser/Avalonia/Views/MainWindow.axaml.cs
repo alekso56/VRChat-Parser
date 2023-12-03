@@ -7,10 +7,7 @@ using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Speech.Synthesis;
 using System.Xml;
 
 namespace XSOverlay_VRChat_Parser.Avalonia.Views
